@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:12
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    volumes: 
+      - mongo-data:/data/db
+    networks:
+      - backend
+    
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend
+
+volumes:
+  pg-data:
+  mongo-data:
+  redis-data:
+
+networks:
+  backend:
+    driver: bridge

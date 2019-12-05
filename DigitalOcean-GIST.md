@@ -2,7 +2,7 @@
 Instruções para criação de um servidor na Digital Ocean para fazer deploy de aplicações Node.js
 
 ## Configuração Inicial
-
+Configurações iniciais do Droplet da Digital Ocean (aplicável para outros servidores).
 
 ### Configurando Usuário e Ubuntu
 Criar usuário **deploy** e criar as permissões:
@@ -30,9 +30,10 @@ apt upgrade
 `sudo apt install docker-compose`
 - Permissões do docker-compose?
 
-## Configurando Postgres
+## Configurando Postgres Geral
+Será criado um container Postgres denominado `database` que será utilizado pelas aplicações instaladas diretamente no servidor, sem utilização do Docker.
 ### Criando o container
-Se a aplicação estiver em um container, não há necessidade de fazer o redirecionamento das portas. Podendo acessar somente via rede interna Docker garantindo mais segurança.
+Recomenda-se que seja gerada uma senha para o usuário administrador, sendo que este container terá sua porta disponibilizada para permitir acesso por aplicações que não participam de uma Rede do Docker.
 `docker run --name database -e POSTGRES_PASSWORD=docker -p 5432:5432 --restart always -d postgres`
 
 ### Configurando um Banco de Dados
@@ -48,6 +49,8 @@ GRANT ALL PRIVILEGES ON DATABASE nodedeploy TO nodeapp;
 ```
 
 ## Configurando Aplicação Node.js
+As aplicações/repositórios serão instaladas na pasta `~/app`, inicialmente utilizando-se `git clone` com alguma política de CD/CI.
+
 ### Aplicação rodando sem Container
 Basta criar a pasta e realizar um git clone. Exemplo:
 ```

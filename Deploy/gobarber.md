@@ -12,7 +12,8 @@ API GoBarber
 ## Deploy Inicial
 Comandos utilizados no Deploy
 1- Configuração Postgres seguindo diretivas `/services/Postgres.md`
-2- Build com Dockerfile
+2- Clone do repositório para a pasta app: `git clone https://github.com/gusflopes/gobarber-backend.git gobarber`
+3- Configurar variáveis de ambiente
 3- ????
 
 ## Política de CI/CD

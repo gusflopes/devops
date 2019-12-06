@@ -9,6 +9,8 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
+    ports:
+      - '5432:5432'
     volumes:
       - pg-data:/var/lib/postgresql/data
     networks:
@@ -21,6 +23,8 @@ services:
     environment: 
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    ports:
+      - '27017:27017'
     volumes: 
       - mongo-data:/data/db
     networks:
@@ -30,6 +34,8 @@ services:
     image: redis:alpine
     container_name: redis
     restart: always
+    ports:
+      - '6379:6379'
     volumes:
       - redis-data:/data
     networks:

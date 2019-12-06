@@ -1,6 +1,10 @@
-# Configurando o DB Postgres
-O Container Postgres criado com o `docker-compose` não faz reencaminhamento de portas, sendo acessível apenas via Docker Network.
-Para cada nova aplicação utilizando o Postgres, criar um novo usuário e a respectiva tabela, sendo que as migrations serão efetuadas por script.
+# Configurando o MongoDB
+O Container Mongo criado com o `docker-compose` não faz reencaminhamento de portas, sendo acessível apenas via Docker Network.
+Para cada nova aplicação utilizando o MongoDB, criar um novo usuário e a respectiva tabela, sendo que as migrations serão efetuadas por script.
+
+---
+**(Texto abaixo a ser editado)**
+
 
 ## Configuração Inicial
 O Postgres é criado apenas com a DATABASE `test`, salvo se as variáveis de ambiente padrão tenham sido modificadas. Para confirmar, basta executar os seguintes comandos:
@@ -16,27 +20,21 @@ psql
 ```
 Esse banco de dados `test` geralmente é utilizado para rodar os testes, utilizado normalmente em ambiente de desenvolvimento utilizando o usuário/senha padrão.
 
-## Nova aplicação (NODE_ENV='production')
+## Nova aplicação (Produção)
 Para cada nova aplicação a ser criada que utilizará o **Postgres**, será necessário a criação de um novo Usuário e Banco de Dados, garantindo assim que uma aplicação não acessa os dados de outra apalicação.
 
 Definidas as variáveis de ambiente que serão utilizadas na aplicação em Produção, basta executar os seguintes comandos:
 
 ```
 docker exec -it postgres /bin/bash
-
-su postgres
-
+su postgres # Usar o usuário configurado no .env
 psql
-
 CREATE DATABASE <DB_NAME>;
-
-CREATE USER <DB_USER> WITH 
-ENCRYPTED PASSWORD '<DB_PASS>';
-
+CREATE USER <DB_USER> WITH ENCRYPTED PASSWORD '<DB_PASS>';
 GRANT ALL PRIVILEGES ON DATABASE <DB_NAME> TO <DB_USER>;
 ```
 
-## Nova aplicação (NODE_ENV='development')
+## Nova aplicação (Desenvolvimento)
 Em ambiente de desenvolvimento não há necessidade de maiores ajustes com relação à segurança, podendo utilizar o usuário padrão (*postgres* no meu caso), sendo necessário apenas criar o respectivo banco de dados.
 
 Existem duas opções:
@@ -46,11 +44,8 @@ Nesse caso vamos fazer tal como fazemos em ambiente de produção, mas sem neces
 
 ```
 docker exec -it postgres /bin/bash
-
-su postgres
-
+su postgres # Usar o usuário configurado no .env
 psql
-
 CREATE DATABASE <DB_NAME>;
 ```
 

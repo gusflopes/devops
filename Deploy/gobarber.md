@@ -14,7 +14,8 @@ Comandos utilizados no Deploy
 1- Configuração Postgres seguindo diretivas `/services/Postgres.md`
 2- Clone do repositório para a pasta app: `git clone https://github.com/gusflopes/gobarber-backend.git gobarber`
 3- Configurar variáveis de ambiente
-3- ????
+3- Instalar dependências: `yarn`
+4- 
 
 ## Política de CI/CD
 Detalhes sobre política

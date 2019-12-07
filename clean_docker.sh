@@ -11,3 +11,7 @@ docker network rm $(docker network ls)
 
 # Delete all volumes
 docker volume rm $(docker volume ls)
+
+# Delete all images
+docker rmi $(docker image ls)
+

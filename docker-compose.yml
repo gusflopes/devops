@@ -37,8 +37,11 @@ services:
 
 volumes:
   pg-data:
+    name: pg-data
   mongo-data:
+    name: mongo-data
   redis-data:
+    name: redis-data
 
 networks:
   backend:

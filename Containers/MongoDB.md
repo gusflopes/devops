@@ -3,58 +3,51 @@ O Container Mongo criado com o `docker-compose` não faz reencaminhamento de por
 Para cada nova aplicação utilizando o MongoDB, criar um novo usuário e a respectiva tabela, sendo que as migrations serão efetuadas por script.
 
 ---
-**(Texto abaixo a ser editado)**
 
+# Configurando o DB MongoDB
+O Container MongoDB criado com o `docker-compose` não faz reencaminhamento de portas, sendo acessível apenas via Docker Network.
+Para cada nova aplicação utilizando o MongoDB, criar um novo usuário e a respectiva tabela, sendo que as migrations serão efetuadas por script.
 
 ## Configuração Inicial
-O Postgres é criado apenas com a DATABASE `test`, salvo se as variáveis de ambiente padrão tenham sido modificadas. Para confirmar, basta executar os seguintes comandos:
+O MongoDB é criado sem nenhuma DATABASE `test`, apenas um usuário e senha definidos no arquivo `.env`.
+
+Para acessar o MongoDB via shell, basta executar os seguintes comandos:
 
 ```
-docker exec -it postgres /bin/bash
+docker exec -it mongo bash
 
-su postgres
-
-psql
-
-\l
+mongo -u <USER> -p <PASSWORD>
 ```
-Esse banco de dados `test` geralmente é utilizado para rodar os testes, utilizado normalmente em ambiente de desenvolvimento utilizando o usuário/senha padrão.
 
-## Nova aplicação (Produção)
-Para cada nova aplicação a ser criada que utilizará o **Postgres**, será necessário a criação de um novo Usuário e Banco de Dados, garantindo assim que uma aplicação não acessa os dados de outra apalicação.
+
+## Nova aplicação (NODE_ENV='production')
+Para cada nova aplicação a ser criada que utilizará o **MongoDB**, será necessário a criação de um novo Usuário e Banco de Dados, garantindo assim que uma aplicação não acesse os dados de outra apalicação.
 
 Definidas as variáveis de ambiente que serão utilizadas na aplicação em Produção, basta executar os seguintes comandos:
 
 ```
-docker exec -it postgres /bin/bash
-su postgres # Usar o usuário configurado no .env
-psql
-CREATE DATABASE <DB_NAME>;
-CREATE USER <DB_USER> WITH ENCRYPTED PASSWORD '<DB_PASS>';
-GRANT ALL PRIVILEGES ON DATABASE <DB_NAME> TO <DB_USER>;
+docker exec -it mongo /bin/bash
+
+mongo -u <USER> -p <PASSWORD>
+
+# Criar novo DB
+use <DBNAME>
+
+#Criar nova collection e primeiro registro
+db.new_collection.insert({ some_key: "some_value })
+
+# Criar novo usuário
+db.createUser(
+  {
+    user: "new_user",
+    pwd: "some_password",
+    roles: [ { role: "readWrite", db: "new_database" } ]
+  }
+)
 ```
 
-## Nova aplicação (Desenvolvimento)
-Em ambiente de desenvolvimento não há necessidade de maiores ajustes com relação à segurança, podendo utilizar o usuário padrão (*postgres* no meu caso), sendo necessário apenas criar o respectivo banco de dados.
-
-Existem duas opções:
-
-### Criar Banco de Dados diretamente no Postgres
-Nesse caso vamos fazer tal como fazemos em ambiente de produção, mas sem necessidade de criar um novo usuário. Basta usar os seguintes comandos:
-
-```
-docker exec -it postgres /bin/bash
-su postgres # Usar o usuário configurado no .env
-psql
-CREATE DATABASE <DB_NAME>;
-```
-
-### Criar Banco de Dados utilizando o Sequelize
-Se preferir, o banco de dados pode ser criado diretamente pela aplicação Node.js. Podem haver variações conforme a ORM utilizada, mas usando o Sequelize, basta rodar o seguinte comando no Container da Aplicação Node.js:
-
-`yarn sequelize db:create <DB_NAME>`
-
-Essa opção pode ser mais eficiente quando pois na construção do Container já podemos automatizar a criação do banco de dados, as migrations, e eventuais seeds.
+## Nova aplicação (NODE_ENV='development')
+Em ambiente de desenvolvimento não há necessidade de maiores ajustes com relação à segurança, podendo utilizar o usuário padrão (*root* no meu caso), sendo necessário apenas criar o respectivo banco de dados (**Verificar se precisa criar o DB??**).
 
 ## Próximas etapas
 (Em desenvolvimento)
